@@ -90,3 +90,6 @@ ENV/
 
 # IDEA Python Thing
 DevotedBot.iml
+
+# Config File
+config.cfg
