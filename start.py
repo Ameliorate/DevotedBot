@@ -12,6 +12,7 @@ from quarry.mojang.profile import Profile
 from devbot import chat
 
 CONFIG_FILE = 'config.cfg'
+CONFIG = configparser.ConfigParser()
 COMMAND_FILE = 'commands.cfg'
 COMMANDS = configparser.ConfigParser()
 COMMANDS.read(COMMAND_FILE)
@@ -36,10 +37,7 @@ class DevotedBotClientProtocol(ClientProtocol):
     def packet_disconnect(self, buff):
         message = buff.unpack_chat()
         print('Disconnected for reason:', message)
-        if message == "You're not allowed to spam in chat!":
-            factory.stop()
-            time.sleep(5)
-            factory.run()
+        factory.stop()
 
     def packet_chat_message(self, buff):
         chat = buff.unpack_chat()
@@ -77,19 +75,18 @@ def generate_config_file(name, config):
 
 
 def main():
-    cfg = configparser.ConfigParser()
     if os.path.isfile(CONFIG_FILE):
-        cfg.read(CONFIG_FILE)
+        CONFIG.read(CONFIG_FILE)
     else:
-        generate_config_file(CONFIG_FILE, cfg)
+        generate_config_file(CONFIG_FILE, CONFIG)
 
     profile = Profile()
-    if not cfg['auth'].getboolean('auth'):
-        profile.login_offline(cfg['auth']['username'])
+    if not CONFIG['auth'].getboolean('auth'):
+        profile.login_offline(CONFIG['auth']['username'])
         factory.profile = profile
     else:
         def login_ok(data):
-            factory.connect(cfg['server']['ip'], int(cfg['server']['port']))
+            factory.connect(CONFIG['server']['ip'], int(CONFIG['server']['port']))
 
         def login_failed(err):
             print('login failed:', err.value)
@@ -97,7 +94,7 @@ def main():
             sys.exit(1)
 
         factory.profile = profile
-        deferred = profile.login(cfg['auth']['username'], cfg['auth']['password'])
+        deferred = profile.login(CONFIG['auth']['username'], CONFIG['auth']['password'])
         deferred.addCallbacks(login_ok, login_failed)
         factory.run()
 
@@ -122,7 +119,7 @@ def handle_chat(message, protocol):
             if match:
                 message = message[match.end():]
                 message = message[:-1]
-                locate('commands.' + COMMANDS['regex'][command] + '.call')(message, name, protocol)
+                locate('commands.' + COMMANDS['regex'][command] + '.call')(message, name, protocol, CONFIG, COMMANDS)
                 return True
         chat.say('/r Sorry, that command was not recognized as valid.', protocol)
         return False
