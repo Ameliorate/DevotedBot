@@ -1,0 +1,2 @@
+class ChatMessageTooLongError(Exception):
+    pass
