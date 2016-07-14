@@ -118,7 +118,7 @@ def handle_chat(message, protocol):
         name = message[5:].split(': ')[0]
         message = message[match.end():]
         for command in COMMANDS['regex'].keys():
-            match = re.match(command + r'\s', message)
+            match = re.match(command + r'\s', message, re.IGNORECASE)
             if match:
                 message = message[match.end():]
                 message = message[:-1]
