@@ -99,14 +99,14 @@ def handle_chat(message, protocol):
     """
     :return: Weather or not the chat message was a valid command
     """
-    if re.match(r'From Amelorate: say', message):
+    if re.match(r'From Amelorate: ssh', message):
         chat.say(message[20:], protocol)
         return True
     match = re.match(r'From .*:\s', message)
     if match:
+        protocol.logger.info(':c: ' + message[5:])
         name = message[5:].split(': ')[0]
         message = message[match.end():]
-        print(name)
         for command in COMMANDS['regex'].keys():
             if re.match(command, message):
                 locate('commands.' + COMMANDS['regex'][command] + '.call')(message, name, protocol)
