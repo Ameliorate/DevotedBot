@@ -22,6 +22,9 @@ class DevotedBotClientProtocol(ClientProtocol):
     def packet_keep_alive(self, buff):
         identifier = buff.unpack_varint(signed=True)
         self.send_packet('keep_alive', self.buff_type.pack_varint(identifier, signed=True))
+        global COMMANDS
+        COMMANDS = configparser.ConfigParser()
+        COMMANDS.read(COMMAND_FILE)
 
     def packet_update_health(self, buff):
         health = buff.unpack('f')
