@@ -9,7 +9,23 @@ CONFIG_FILE = 'config.cfg'
 
 
 class DevotedBotClientProtocol(ClientProtocol):
-    pass
+    def packet_keep_alive(self, buff):
+        identifier = buff.unpack_varint(signed=True)
+        self.send_packet('keep_alive', self.buff_type.pack_varint(identifier, signed=True))
+
+    def packet_update_health(self, buff):
+        health = buff.unpack('f')
+        food = buff.unpack_varint()
+        saturation = buff.unpack('f')
+
+        if health <= 0:
+            self.send_packet('client_status', self.buff_type.pack_varint(0))
+            print('Died, respawning...')
+
+    def packet_disconnect(self, buff):
+        message = buff.unpack_chat()
+        print('Disconnected for reason: ', message)
+        sys.exit(1)
 
 
 class DevotedBotClientFactory(ClientFactory):
@@ -32,7 +48,7 @@ def generate_config_file(name, config):
 def main():
     cfg = configparser.ConfigParser()
     if os.path.isfile(CONFIG_FILE):
-       cfg.read(CONFIG_FILE)
+        cfg.read(CONFIG_FILE)
     else:
         generate_config_file(CONFIG_FILE, cfg)
 
