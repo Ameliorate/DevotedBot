@@ -45,13 +45,13 @@ class DevotedBotClientProtocol(ClientProtocol):
         chat = buff.unpack_chat()
         position = buff.unpack("b")
         if position == 0:
-            self.logger.info(':: ' + chat)
+            print(':: ' + chat)
         elif position == 1:
             result = handle_chat(chat, self)
             if not result:
-                self.logger.info(':=: ' + chat)
+                print(':=: ' + chat)
         elif position == 2:
-            self.logger.info(':_: ' + chat)
+            print(':_: ' + chat)
         else:
             self.logger.warning('Unhandled chat position: ' + position + ' skipping.')
             return
@@ -110,7 +110,7 @@ def handle_chat(message, protocol):
         return True
     match = re.match(r'From .*:\s', message)
     if match:
-        protocol.logger.info(':c: ' + message[5:])
+        print(':c: ' + message[5:])
         name = message[5:].split(': ')[0]
         message = message[match.end():]
         for command in COMMANDS['regex'].keys():
