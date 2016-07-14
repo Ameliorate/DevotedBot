@@ -2,6 +2,7 @@ import configparser
 import os.path
 import sys
 import re
+import time
 
 from pydoc import locate
 
@@ -28,12 +29,17 @@ class DevotedBotClientProtocol(ClientProtocol):
 
         if health <= 0:
             self.send_packet('client_status', self.buff_type.pack_varint(0))
+            chat.say('/g GlobalChat', self)
+            chat.say('Please do not kill DevotedBot.', self)
             print('Died, respawning...')
 
     def packet_disconnect(self, buff):
         message = buff.unpack_chat()
-        print('Disconnected for reason: ', message)
-        sys.exit(1)
+        print('Disconnected for reason:', message)
+        if message == "You're not allowed to spam in chat!":
+            factory.stop()
+            time.sleep(5)
+            factory.run()
 
     def packet_chat_message(self, buff):
         chat = buff.unpack_chat()
@@ -54,6 +60,7 @@ class DevotedBotClientProtocol(ClientProtocol):
 class DevotedBotClientFactory(ClientFactory):
     protocol = DevotedBotClientProtocol
 
+factory = DevotedBotClientFactory()
 
 def generate_config_file(name, config):
     config['auth'] = {'username': 'USERNAME',
@@ -76,7 +83,6 @@ def main():
         generate_config_file(CONFIG_FILE, cfg)
 
     profile = Profile()
-    factory = DevotedBotClientFactory()
     if not cfg['auth'].getboolean('auth'):
         profile.login_offline(cfg['auth']['username'])
         factory.profile = profile
@@ -108,7 +114,10 @@ def handle_chat(message, protocol):
         name = message[5:].split(': ')[0]
         message = message[match.end():]
         for command in COMMANDS['regex'].keys():
-            if re.match(command, message):
+            match = re.match(command + r'\s', message)
+            if match:
+                message = message[match.end():]
+                message = message[:-1]
                 locate('commands.' + COMMANDS['regex'][command] + '.call')(message, name, protocol)
                 return True
         chat.say('/r Sorry, that command was not recognized as valid.', protocol)
