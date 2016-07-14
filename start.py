@@ -62,6 +62,7 @@ class DevotedBotClientFactory(ClientFactory):
 
 factory = DevotedBotClientFactory()
 
+
 def generate_config_file(name, config):
     config['auth'] = {'username': 'USERNAME',
                       'password': 'PASSWORD',
@@ -105,9 +106,12 @@ def handle_chat(message, protocol):
     """
     :return: Weather or not the chat message was a valid command
     """
-    if re.match(r'From Amelorate: ssh', message):
+    if message == 'You are already chatting in that group.':
+        return True
+    elif re.match(r'From Amelorate: ssh', message):
         chat.say(message[20:], protocol)
         return True
+
     match = re.match(r'From .*:\s', message)
     if match:
         print(':c: ' + message[5:])
