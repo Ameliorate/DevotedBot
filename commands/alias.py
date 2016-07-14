@@ -11,7 +11,7 @@ def call(message, name, protocol, cfg, commands):
         if tupl[1] == message:
             aliases = aliases + tupl[0] + ', '
     if aliases == '':
-        chat.say('Sorry, there is no command by that name.', protocol)
+        chat.say('/r Sorry, there is no command by that name.', protocol)
     else:
         chat.say('/r ' + aliases, protocol)
 
