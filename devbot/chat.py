@@ -10,7 +10,7 @@ def say(message, protocol):
 
 
 def say_wrap(prefix, message, protocol):
-    max_len = 100 - len(prefix)
+    max_len = 99 - len(prefix)
     wrap = textwrap.wrap(message, max_len)
     for msg in wrap:
         say(prefix + msg, protocol)
