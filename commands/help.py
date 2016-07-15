@@ -18,6 +18,6 @@ def call(message, name, protocol, cfg, commands):
 
     for regex in commands['regex'].keys():
         if re.match(regex, message):
-            chat.say('/msg ' + name + ' ' + commands['help'][commands['regex'][regex]].format(message))
+            chat.say_wrap('/msg ' + name + ' ', commands['help'][commands['regex'][regex]].format(message))
             return
     chat.say('/msg ' + name + ' help: Sorry, there was not a command by that name to get help on.')
