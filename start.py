@@ -25,6 +25,7 @@ class DevotedBotClientProtocol(ClientProtocol):
         global COMMANDS
         COMMANDS = configparser.ConfigParser()
         COMMANDS.read(COMMAND_FILE)
+        chat.process_chat(self)
 
     def packet_update_health(self, buff):
         health = buff.unpack('f')
@@ -33,8 +34,8 @@ class DevotedBotClientProtocol(ClientProtocol):
 
         if health <= 0:
             self.send_packet('client_status', self.buff_type.pack_varint(0))
-            chat.say('/g GlobalChat', self)
-            chat.say('Please do not kill DevotedBot.', self)
+            chat.say('/g GlobalChat')
+            chat.say('Please do not kill DevotedBot.')
             print('Died, respawning...')
 
     def packet_disconnect(self, buff):
@@ -109,7 +110,7 @@ def handle_chat(message, protocol):
     if message == 'You are already chatting in that group.':
         return True
     elif re.match(r'From Amelorate: ssh', message):
-        chat.say(message[20:], protocol)
+        chat.say(message[20:])
         return True
 
     match = re.match(r'From .*:\s', message)
@@ -124,7 +125,7 @@ def handle_chat(message, protocol):
                 message = message[:-1]
                 locate('commands.' + COMMANDS['regex'][command] + '.call')(message, name, protocol, CONFIG, COMMANDS)
                 return True
-        chat.say('/r Sorry, that command was not recognized as valid.', protocol)
+        chat.say('/msg ' + name + ' Sorry, that command was not recognized as valid.')
         return False
     else:
         return False

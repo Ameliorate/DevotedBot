@@ -3,7 +3,7 @@ from devbot import chat
 
 def call(message, name, protocol, cfg, commands):
     if message == '':
-        chat.say('/r ' + commands['help']['alias'].format('alias'), protocol)
+        chat.say('/r ' + commands['help']['alias'].format('alias'))
         return
 
     aliases = ''
@@ -11,7 +11,7 @@ def call(message, name, protocol, cfg, commands):
         if tupl[1] == message:
             aliases = aliases + tupl[0] + ', '
     if aliases == '':
-        chat.say('/r Sorry, there is no command by that name.', protocol)
+        chat.say('/msg ' + name + ' Sorry, there is no command by that name.')
     else:
-        chat.say('/r ' + aliases, protocol)
+        chat.say('/msg ' + name + aliases)
 

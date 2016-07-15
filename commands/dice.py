@@ -8,10 +8,10 @@ def call(message, name, protocol, cfg, commands):
     # noinspection PyBroadException
     try:
         result = dice.roll(message)
-        chat.say('/r ' + str(result), protocol)
+        chat.say('/msg ' + name + ' ' + str(result))
     except ChatMessageTooLongError:
-        chat.say('/r Sorry, that dicestring gave too many numbers.', protocol)
+        chat.say('/msg ' + name + ' Sorry, that dicestring gave too many numbers.')
     except Exception as e:
-        chat.say('/r Sorry, there was a error in that dice roll:', protocol)
+        chat.say('/msg ' + name + ' Sorry, there was a error in that dice roll:')
         if str(e) != '':
-            chat.say_wrap('/r ', str(e), protocol)
+            chat.say_wrap('/msg ' + name + ' ', str(e))
