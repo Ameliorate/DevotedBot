@@ -8,7 +8,8 @@ QUOTES = (
     ("Fuck Wergo", "doughy-goods"),
     ("Yeah Gar", "Garking"),
     ("What do you mean? I never hated black people. Ooooh. I see what you mean. I hate niggers with a passion. REEEEEEEEEEEEEEEEEEEEEEEEEE.", "OurTrueLeader"),
-    ('this is like saying" OTL is a cool guy, aside from the blatant racism and autism"', "bayernanhaenger")
+    ('this is like saying" OTL is a cool guy, aside from the blatant racism and autism"', "bayernanhaenger"),
+    ("My favourite colours are blue and light blue...", "bigbrainiac10")
 )
 
 
