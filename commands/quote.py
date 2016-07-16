@@ -18,4 +18,4 @@ QUOTES = (
 def call(message, name, protocol, cfg, commands):
     quote = choice(QUOTES)
     full = '"{}" -{}'.format(quote[0], quote[1])
-    chat.say_wrap('/msg ' + name + ' ', full)
+    chat.say_wrap('/msg {} '.format(name), full)

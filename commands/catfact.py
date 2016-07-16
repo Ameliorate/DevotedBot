@@ -13,10 +13,10 @@ def call(message, name, protocol, cfg, commands):
         chat.say('/g GlobalChat')
         if message.lower() != '' and commands['catfacts'].getboolean('allowglobal'):
             prefix = ''
-            chat.say('/g ' + message)
+            chat.say('/g {}'.format(message))
         chat.say_wrap(prefix, fact)
     else:
-        chat.say('/msg ' + name + ' Error getting cat fact.')
+        chat.say('/msg {} Error getting cat fact.'.format(name))
         chat.say('/g GlobalChat')
         chat.say('Someone reddit mail /u/Amelorate this:')
-        chat.say_wrap(requ.text)
+        chat.say_wrap('', requ.text)

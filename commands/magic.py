@@ -17,4 +17,4 @@ ANSWERS = (
 
 
 def call(message, name, protocol, cfg, commands):
-    chat.say('/msg ' + name + ' ' + choice(ANSWERS))
+    chat.say('/msg {} {}'.format(name, choice(ANSWERS)))
