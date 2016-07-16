@@ -24,8 +24,9 @@ def call(message, name, protocol, cfg, commands):
             chat.say_wrap('/msg {} '.format(name), genrelist)
             return
 
-        songs = music[message]
-        if songs is None:
+        try:
+            songs = music[message]
+            chat.say('/msg {} {}'.format(name, choice(songs)))
+        except KeyError:
             chat.say('/msg {} Sorry, there were no songs under that genre.'.format(name))
-            return
-        chat.say('/msg {} {}'.format(name, choice(songs)))
+
