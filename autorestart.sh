@@ -1,6 +1,6 @@
 #! /bin/bash
 
 while true ; do
-    python start.py
+    python3 start.py
     sleep 30
 done
