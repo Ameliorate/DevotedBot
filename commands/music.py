@@ -11,10 +11,11 @@ def call(message, name, protocol, cfg, commands):
         if message == '':
             chat.say('/msg {} Use `music list` to list all genres.'.format(name))
             allsongs = []
-            for genre in music.values():
-                for song in genre:
-                    allsongs.append(song)
-            chat.say('/msg {} {}'.format(name, choice(allsongs)))
+            for genre in music.items():
+                for song in genre[1]:
+                    allsongs.append((song, genre[0]))
+            song = choice(allsongs)
+            chat.say('/msg {} {} -- {}'.format(name, song[0], song[1]))
             return
 
         if message == 'list':
