@@ -11,7 +11,8 @@ QUOTES = (
     ('this is like saying" OTL is a cool guy, aside from the blatant racism and autism"', "bayernanhaenger"),
     ("My favourite colours are blue and light blue...", "bigbrainiac10"),
     ("If I pearl ron_paul I'm naming the post ron_pearl claimed post Garry Oak", "Soerxpso"),
-    ("oh the door is gone", "kaiman")
+    ("oh the door is gone", "kaiman"),
+    ("Dude you can get 10 helicopters for the price of one giraffe.", "Soerxpso")
 )
 
 
