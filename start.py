@@ -9,7 +9,10 @@ from pydoc import locate
 from quarry.net.client import ClientProtocol, ClientFactory
 from quarry.mojang.profile import Profile
 
+from pypeg2 import parse
+
 from devbot import chat
+from devbot.parse import PrivateMessage
 
 CONFIG_FILE = 'config.cfg'
 CONFIG = configparser.ConfigParser()
@@ -62,6 +65,7 @@ class DevotedBotClientProtocol(ClientProtocol):
 class DevotedBotClientFactory(ClientFactory):
     protocol = DevotedBotClientProtocol
 
+
 factory = DevotedBotClientFactory()
 
 
@@ -107,6 +111,7 @@ def handle_chat(message, protocol):
     """
     :return: Weather or not the chat message was a valid command
     """
+    message = message.strip()
     if message == 'You are already chatting in that group.':
         return True
     elif re.match(r'From Amelorate: ssh', message):
@@ -115,17 +120,17 @@ def handle_chat(message, protocol):
 
     match = re.match(r'From .*:\s', message)
     if match:
-        print(':c: ' + message[5:])
-        name = message[5:].split(': ')[0]
-        message = message[match.end():]
+        parsed = parse(message, PrivateMessage)
+        print(':c: {}: {}'.format(parsed.name, parsed.message))
         for command in COMMANDS['regex'].keys():
             match = re.match(command + r'\s', message, re.IGNORECASE)
             if match:
-                message = message[match.end():]
-                message = message[:-1]
-                locate('commands.' + COMMANDS['regex'][command] + '.call')(message, name, protocol, CONFIG, COMMANDS)
+                message = message.parsed[match.end():]
+                locate('commands.' + COMMANDS['regex'][command] + '.call')(message, parsed.name, protocol, CONFIG,
+                                                                           COMMANDS)
                 return True
-        chat.say('/msg ' + name + ' Sorry, that command was not recognized as valid.')
+        chat.say_wrap('/msg {} '.format(parsed.name),
+                      'Sorry, the command `{}` was not recognized as valid.'.format(parsed.message))
         return False
     else:
         return False
