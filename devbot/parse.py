@@ -26,7 +26,8 @@ class Argument:
 
 
 class Command:
-    grammar = attr('command'), [attr('args', csl(Argument, separator='')), '']
+    grammar = attr('command'), [attr('args', maybe_some(Argument, blank)), '']
+    args = None
 
 
 RedirectedArgument.grammar = '<(', attr('command', Command), ')'
