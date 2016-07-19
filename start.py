@@ -11,7 +11,7 @@ from quarry.mojang.profile import Profile
 
 from pypeg2 import parse
 
-from devbot import chat
+from devbot import chat, parse_pm
 from devbot.parse import PrivateMessage
 
 CONFIG_FILE = 'config.cfg'
@@ -120,18 +120,17 @@ def handle_chat(message, protocol):
 
     match = re.match(r'From .*:\s', message)
     if match:
-        parsed = parse(message, PrivateMessage)
-        print(':c: {}: {}'.format(parsed.name, parsed.message))
-        for command in COMMANDS['regex'].keys():
-            match = re.match(command + r'\s', message, re.IGNORECASE)
-            if match:
-                message = message.parsed[match.end():]
-                locate('commands.' + COMMANDS['regex'][command] + '.call')(message, parsed.name, protocol, CONFIG,
-                                                                           COMMANDS)
-                return True
-        chat.say_wrap('/msg {} '.format(parsed.name),
-                      'Sorry, the command `{}` was not recognized as valid.'.format(parsed.message))
-        return False
+        try:
+            parsed_full, pm = parse_pm(message)
+        except SyntaxError as e:
+            pm = parse(message, PrivateMessage)
+            chat.say_wrap('/msg {} '.format(pm.name), 'There was a syntax error in your command: {}'.format(str(e)))
+            return True
+        print(':c: {}: {}'.format(pm.name, pm.message))
+        # TODO: Run commands.
+        chat.say_wrap('/msg {} '.format(pm.name),
+                      'Sorry, the command `{}` was not recognized as valid.'.format(pm.message))
+        return True
     else:
         return False
 
