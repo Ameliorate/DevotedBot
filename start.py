@@ -124,7 +124,7 @@ def handle_chat(message, protocol):
             parsed_full, pm = parse_pm(message)
         except SyntaxError as e:
             pm = parse(message, PrivateMessage)
-            chat.PrivateChat(pm.name).say(
+            chat.PrivateMessage(pm.name).say(
                 'There was a syntax error in your command: {} (character {})'.format(str(e), e.offset))
 
             return True
@@ -134,9 +134,9 @@ def handle_chat(message, protocol):
             if valid_command:
                 return True
         except NotImplementedError as e:
-            chat.PrivateChat(pm.name).say('Not Implemented: {}'.format(str(e)))
+            chat.PrivateMessage(pm.name).say('Not Implemented: {}'.format(str(e)))
             return True
-        chat.PrivateChat(pm.name).say('Sorry, the command `{}` was not recognized as valid.'.format(pm.message))
+        chat.PrivateMessage(pm.name).say('Sorry, the command `{}` was not recognized as valid.'.format(pm.message))
 
         return True
     else:

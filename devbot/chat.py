@@ -48,7 +48,7 @@ class GroupChat(Chat):
         CHAT_QUEUE.put(_ChannelMessage(self.group, message))
 
 
-class PrivateChat(Chat):
+class PrivateMessage(Chat):
     def __init__(self, person):
         self.person = person
 
