@@ -115,7 +115,7 @@ def handle_chat(message, protocol):
     if message == 'You are already chatting in that group.':
         return True
     elif re.match(r'From Amelorate: ssh', message):
-        chat.say(message[20:])
+        chat.Command().say(message[20:])
         return True
 
     match = re.match(r'From .*:\s', message)
@@ -124,8 +124,9 @@ def handle_chat(message, protocol):
             parsed_full, pm = parse_pm(message)
         except SyntaxError as e:
             pm = parse(message, PrivateMessage)
-            chat.say_wrap('/msg {} '.format(pm.name),
-                          'There was a syntax error in your command: {} (character {})'.format(str(e), e.offset))
+            chat.PrivateChat(pm.name).say(
+                'There was a syntax error in your command: {} (character {})'.format(str(e), e.offset))
+
             return True
         print(':c: {}: {}'.format(pm.name, pm.message))
         try:
@@ -133,10 +134,10 @@ def handle_chat(message, protocol):
             if valid_command:
                 return True
         except NotImplementedError as e:
-            chat.say_wrap('/msg {} '.format(pm.name), 'Not Implemented: {}'.format(str(e)))
+            chat.PrivateChat(pm.name).say('Not Implemented: {}'.format(str(e)))
             return True
-        chat.say_wrap('/msg {} '.format(pm.name),
-                      'Sorry, the command `{}` was not recognized as valid.'.format(pm.message))
+        chat.PrivateChat(pm.name).say('Sorry, the command `{}` was not recognized as valid.'.format(pm.message))
+
         return True
     else:
         return False
