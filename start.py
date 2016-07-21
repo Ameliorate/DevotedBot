@@ -37,8 +37,7 @@ class DevotedBotClientProtocol(ClientProtocol):
 
         if health <= 0:
             self.send_packet('client_status', self.buff_type.pack_varint(0))
-            chat.say('/g GlobalChat')
-            chat.say('Please do not kill DevotedBot.')
+            chat.GroupChat('GlobalChat').say('Please do not kill DevotedBot.')
             print('Died, respawning...')
 
     def packet_disconnect(self, buff):
@@ -126,18 +125,12 @@ def handle_chat(message, protocol):
             pm = parse(message, PrivateMessage)
             chat.PrivateMessage(pm.name).say(
                 'There was a syntax error in your command: {} (character {})'.format(str(e), e.offset))
-
             return True
         print(':c: {}: {}'.format(pm.name, pm.message))
         try:
-            valid_command = run_command(parsed_full)
-            if valid_command:
-                return True
+            run_command(parsed_full, chat.PrivateMessage(pm.name), chat.Command(), COMMANDS)
         except NotImplementedError as e:
             chat.PrivateMessage(pm.name).say('Not Implemented: {}'.format(str(e)))
-            return True
-        chat.PrivateMessage(pm.name).say('Sorry, the command `{}` was not recognized as valid.'.format(pm.message))
-
         return True
     else:
         return False

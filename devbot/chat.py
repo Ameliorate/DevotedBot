@@ -79,9 +79,9 @@ def process_chat(protocol):
                                      protocol.buff_type.pack_string('/m {} {}'.format(message.person, msg)))
         elif message.__class__ == _ChannelMessage:
             protocol.send_packet("chat_message", protocol.buff_type.pack_string('/e'))
-            wrap = textwrap.wrap(message.message, 99 - len('/g {} '.format(message.name)))
+            wrap = textwrap.wrap(message.message, 99 - len('/g {} '.format(message.channel)))
             for msg in wrap:
                 protocol.send_packet("chat_message",
-                                     protocol.buff_type.pack_string('/g {} {}'.format(message.name, msg)))
+                                     protocol.buff_type.pack_string('/g {} {}'.format(message.channel, msg)))
     except queue.Empty:
         pass

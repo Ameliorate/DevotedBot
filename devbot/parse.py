@@ -2,19 +2,19 @@ from pypeg2 import *
 
 
 class DQuotedText:
-    grammar = '"', attr('text', re.compile(r"[a-zA-Z\s_+-/*']*")), '"'
+    grammar = '"', attr('text', re.compile(r"[\w\-!?%@#$^&*()\[\]']*")), '"'
 
 
 class SQuotedText:
-    grammar = "'", attr('text', re.compile(r'[a-zA-Z\s_+-/*"]*')), "'"
+    grammar = "'", attr('text', re.compile(r'[\w\-!?%@#$^&*()\[\]"]*')), "'"
 
 
 class UnquotedText:
-    grammar = attr('text')
+    grammar = attr('text', re.compile(r'[\w\-!?%@#$^&*()\[\]]+'))
 
 
 class AbsoluteArgument:
-    grammar = attr('text', [UnquotedText, DQuotedText, SQuotedText])
+    grammar = attr('text', [DQuotedText, SQuotedText, UnquotedText])
 
 
 class RedirectedArgument:
