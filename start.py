@@ -113,7 +113,7 @@ def handle_chat(message, protocol):
     if message == 'You are already chatting in that group.':
         return True
     elif re.match(r'From Amelorate: ssh', message):
-        chat.Command().say(message[20:])
+        chat.command(message[20:])
         return True
 
     match = re.match(r'From .*:\s', message)
