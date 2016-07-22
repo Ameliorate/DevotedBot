@@ -1,19 +1,19 @@
 import signal
+import pypeg2
 
 from contextlib import contextmanager
 from devbot.chat import Chat
 from devbot.parse import *
-from pypeg2 import parse
 from configparser import ConfigParser
 from threading import Thread
 
 
 class DevCommand:
-    def __init__(self, args: [str], command_cfg: ConfigParser, stdout: Chat, cmdout: Chat):
+    def __init__(self, args: [str], command_cfg: ConfigParser, stdout: Chat):
         self.command_cfg = command_cfg
-        self.main(args, stdout, cmdout)
+        self.main(args, stdout)
 
-    def main(self, args: [str], stdout: Chat, cmdout: Chat):
+    def main(self, args: [str], stdout: Chat):
         raise NotImplementedError('Command is an abstract base class')
 
 
@@ -35,13 +35,13 @@ def time_limit(seconds):
 
 
 def parse_pm(message_parsed: str) -> (TerminalCommand, PrivateMessage):
-    message_parsed = parse(message_parsed, PrivateMessage)
+    message_parsed = pypeg2.parse(message_parsed, PrivateMessage)
     print('{}: {}'.format(message_parsed.name, message_parsed.message))
-    cmd = parse(message_parsed.message, TerminalCommand)
+    cmd = pypeg2.parse(message_parsed.message, TerminalCommand)
     return cmd, message_parsed
 
 
-def run_command(cmd: TerminalCommand, stdout: Chat, cmdout: Chat, command_cfg: ConfigParser):
+def run_command(cmd: TerminalCommand, stdout: Chat, command_cfg: ConfigParser):
     if type(cmd.content) == Command:
         print('aaa')
         arglist = []
@@ -59,6 +59,6 @@ def run_command(cmd: TerminalCommand, stdout: Chat, cmdout: Chat, command_cfg: C
             stdout.say('There was no command by the name `{}`'.format(cmd.content.command))
             return
         Thread(target=commandmod.MainCommand, name=cmd.content.command,
-               args=(arglist, command_cfg, stdout, cmdout)).start()
+               args=(arglist, command_cfg, stdout)).start()
     # Room for things like pipes that are implemented in TerminalCommand.
     return False

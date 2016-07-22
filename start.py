@@ -2,14 +2,13 @@ import configparser
 import os.path
 import sys
 import re
-import time
-
-from pydoc import locate
 
 from quarry.net.client import ClientProtocol, ClientFactory
 from quarry.mojang.profile import Profile
 
-from pypeg2 import parse
+from pypeg2 import parse, xmlast
+import pypeg2
+import devbot.parse as devparse
 
 from devbot import chat, parse_pm, run_command
 from devbot.parse import PrivateMessage
@@ -128,7 +127,7 @@ def handle_chat(message, protocol):
             return True
         print(':c: {}: {}'.format(pm.name, pm.message))
         try:
-            run_command(parsed_full, chat.PrivateMessage(pm.name), chat.Command(), COMMANDS)
+            run_command(parsed_full, chat.PrivateMessage(pm.name), COMMANDS)
         except NotImplementedError as e:
             chat.PrivateMessage(pm.name).say('Not Implemented: {}'.format(str(e)))
         return True

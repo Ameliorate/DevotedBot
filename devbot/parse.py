@@ -1,42 +1,42 @@
-from pypeg2 import *
+import pypeg2 as p
 
 
 class DQuotedText:
-    grammar = '"', attr('text', re.compile(r"[\w\-!?%@#$^&*()\[\]']*")), '"'
+    grammar = '"', p.attr('text', p.re.compile(r"[\w\-!?%@#$^&*()\[\]']*")), '"'
 
 
 class SQuotedText:
-    grammar = "'", attr('text', re.compile(r'[\w\-!?%@#$^&*()\[\]"]*')), "'"
+    grammar = "'", p.attr('text', p.re.compile(r'[\w\-!?%@#$^&*()\[\]"]*')), "'"
 
 
 class UnquotedText:
-    grammar = attr('text', re.compile(r'[\w\-!?%@#$^&*()\[\]]+'))
+    grammar = p.attr('text', p.re.compile(r'[\w\-!?%@#$^&*()\[\]]+'))
 
 
 class AbsoluteArgument:
-    grammar = attr('text', [DQuotedText, SQuotedText, UnquotedText])
+    grammar = p.attr('text', [DQuotedText, SQuotedText, UnquotedText])
 
 
 class RedirectedArgument:
-    pass
+    command = None
+    grammar = None
 
 
 class Argument:
-    grammar = attr('content', [RedirectedArgument, AbsoluteArgument])
+    grammar = p.attr('content', [RedirectedArgument, AbsoluteArgument])
 
 
 class Command:
-    grammar = attr('command'), [attr('args', maybe_some(Argument, blank)), '']
+    grammar = p.attr('command'), p.optional(p.blank, p.attr('args', p.some(Argument, p.blank)))
     args = None
 
-
-RedirectedArgument.grammar = '<(', attr('command', Command), ')'
+RedirectedArgument.grammar = '<(', p.attr('command', Command), ')'
 
 
 class PrivateMessage:
-    grammar = 'From', attr('name'), ':', attr('message', restline)
+    grammar = 'From', p.attr('name'), ':', p.attr('message', p.restline)
 
 
 class TerminalCommand:
-    grammar = attr('content', Command)
+    grammar = p.attr('content', Command)
 
