@@ -6,9 +6,7 @@ import re
 from quarry.net.client import ClientProtocol, ClientFactory
 from quarry.mojang.profile import Profile
 
-from pypeg2 import parse, xmlast
-import pypeg2
-import devbot.parse as devparse
+from pypeg2 import parse
 
 from devbot import chat, parse_pm, run_command
 from devbot.parse import PrivateMessage

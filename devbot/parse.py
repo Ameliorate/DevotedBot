@@ -18,8 +18,7 @@ class AbsoluteArgument:
 
 
 class RedirectedArgument:
-    command = None
-    grammar = None
+    pass
 
 
 class Argument:
