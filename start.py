@@ -107,6 +107,17 @@ def handle_chat(message, protocol):
     """
     :return: Weather or not the chat message was a valid command
     """
+    any_chat_hook_ran = False
+    # noinspection PyProtectedMember
+    for hook in chat._CHAT_HOOKS.keys():
+        if re.match(hook, message):
+            any_chat_hook_ran = True
+            # noinspection PyProtectedMember
+            result = chat._CHAT_HOOKS[hook](message)
+            if result:
+                return True
+    if any_chat_hook_ran:
+        return True
     message = message.strip()
     if message == 'You are already chatting in that group.':
         return True

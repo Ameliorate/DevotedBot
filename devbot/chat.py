@@ -1,9 +1,13 @@
 import textwrap
 import queue
+import re
 
 from devbot.exception import ChatMessageTooLongError
 
+from typing import Callable
+
 _MESSAGE_QUEUE = queue.Queue()
+_CHAT_HOOKS = {}
 
 
 class Chat:
@@ -66,3 +70,20 @@ def private_message(person: str, message: str):
 
 def group_message(group: str, message: str):
     command_wrap('/g {} '.format(group), message)
+
+
+def chat_hook(regex: str, hook: Callable[[str], bool]):
+    """
+    Add a hook that'll be called every time the line of chat matches the given regex.
+    :param regex: The regex the chat is matched against.
+    :param hook: The function to be called. It is called with the chat message as it's only argument. If true is returned,
+                 no other hooks are ran.
+    """
+    _CHAT_HOOKS[regex] = hook
+
+
+def del_chat_hook(regex: str):
+    """
+    Disable the chat hook with the given regex.
+    """
+    del _CHAT_HOOKS[regex]
