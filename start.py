@@ -125,7 +125,7 @@ def handle_chat(message, protocol):
             return True
         print(':c: {}: {}'.format(pm.name, pm.message))
         try:
-            run_command(parsed_full, chat.PrivateMessage(pm.name), COMMANDS)
+            run_command(parsed_full, chat.PrivateMessage(pm.name), COMMANDS, pm.name)
         except NotImplementedError as e:
             chat.PrivateMessage(pm.name).say('Not Implemented: {}'.format(str(e)))
         return True

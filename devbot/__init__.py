@@ -9,11 +9,11 @@ from threading import Thread
 
 
 class DevCommand:
-    def __init__(self, args: [str], command_cfg: ConfigParser, stdout: Chat):
+    def __init__(self, args: [str], command_cfg: ConfigParser, stdout: Chat, name: str):
         self.command_cfg = command_cfg
-        self.main(args, stdout)
+        self.main(args, stdout, name)
 
-    def main(self, args: [str], stdout: Chat):
+    def main(self, args: [str], stdout: Chat, name: str):
         raise NotImplementedError('Command is an abstract base class')
 
 
@@ -41,7 +41,7 @@ def parse_pm(message_parsed: str) -> (TerminalCommand, PrivateMessage):
     return cmd, message_parsed
 
 
-def run_command(cmd: TerminalCommand, stdout: Chat, command_cfg: ConfigParser):
+def run_command(cmd: TerminalCommand, stdout: Chat, command_cfg: ConfigParser, name: str):
     if type(cmd.content) == Command:
         print('aaa')
         arglist = []
@@ -59,6 +59,6 @@ def run_command(cmd: TerminalCommand, stdout: Chat, command_cfg: ConfigParser):
             stdout.say('There was no command by the name `{}`'.format(cmd.content.command))
             return
         Thread(target=commandmod.MainCommand, name=cmd.content.command,
-               args=(arglist, command_cfg, stdout)).start()
+               args=(arglist, command_cfg, stdout, name)).start()
     # Room for things like pipes that are implemented in TerminalCommand.
     return False

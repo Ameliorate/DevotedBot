@@ -1,12 +1,24 @@
 from devbot.chat import Chat, command
 from devbot import DevCommand
+from devbot.argparse import BooleanFlag, ContentFlag, parse_flags
 
 
 class MainCommand(DevCommand):
-    def main(self, args: [str], stdout: Chat):
+    def main(self, args: [str], stdout: Chat, name: str):
+        flags, rest_args = parse_flags(args, {'interactive': BooleanFlag('i', 'interactive'),
+                                              'sign': BooleanFlag('s', 'sign'),
+                                              'channel': ContentFlag('c', 'channel')})
+        if flags['channel'] is None:
+            flags['channel'] = 'GlobalChat'
+        if flags['interactive']:
+            raise NotImplementedError('Interactivity is not implemented.')
         to_say = ''
-        for i, word in enumerate(args):
+        for i, word in enumerate(rest_args):
             if i != 0:
                 to_say = to_say + word + ' '
         to_say = to_say.strip()
-        command("/g GlobalChat ``{}''".format(to_say))
+        if flags['sign']:
+            command("/g {} ``{}'' -{}".format(flags['channel'], to_say, name))
+        else:
+            command("/g {} ``{}''".format(flags['channel'], to_say))
+
