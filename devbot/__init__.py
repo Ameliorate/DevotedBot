@@ -47,7 +47,7 @@ def run_command(cmd: TerminalCommand, stdout: Chat, command_cfg: ConfigParser, n
         if cmd.content.args is not None:
             for arg in cmd.content.args:
                 if type(arg.content) == AbsoluteArgument:
-                    arglist.append(arg.content.text.text)
+                    arglist.append(arg.content.text.text.strip())
                 elif type(arg.content) == RedirectedArgument:
                     raise NotImplementedError('redirected arguments are not yet implemented')
         arglist = [cmd.content.command] + arglist
