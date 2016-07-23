@@ -6,6 +6,8 @@ from devbot.parse import *
 import re
 import time
 
+WIKI = 'https://github.com/Ameliorate/DevotedBot/wiki/say'
+
 
 class MainCommand(DevCommand):
     def main(self, args: [str], stdout: Chat, name: str):
@@ -44,7 +46,7 @@ class MainCommand(DevCommand):
 
         def err_hook(msg: str) -> bool:
             stdout.say('There is no group with the name {}'.format(flags['channel']))
-            return True
+            return False
 
         chat_hook(r'There is no group with that name', err_hook)
         time.sleep(5)
