@@ -1,4 +1,4 @@
-from devbot.chat import Chat, command
+from devbot.chat import Chat, group_message
 from devbot import DevCommand
 from devbot.argparse import BooleanFlag, ContentFlag, parse_flags
 
@@ -17,7 +17,7 @@ class MainCommand(DevCommand):
             to_say = to_say + word + ' '
         to_say = to_say.strip()
         if flags['sign']:
-            command("/g {} ``{}'' -{}".format(flags['channel'], to_say, name))
+            group_message(flags['channel'], "``{}'' -{}".format(to_say, name))
         else:
-            command("/g {} ``{}''".format(flags['channel'], to_say))
+            group_message(flags['channel'], "``{}''".format(to_say))
 
