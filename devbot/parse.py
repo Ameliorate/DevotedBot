@@ -1,16 +1,17 @@
 import pypeg2 as p
+import re
 
 
 class DQuotedText:
-    grammar = '"', p.attr('text', p.re.compile(r"[\w\-!?%@#$^&*()\[\]']*")), '"'
+    grammar = '"', p.attr('text', re.compile(r"[^\"]*")), '"'
 
 
 class SQuotedText:
-    grammar = "'", p.attr('text', p.re.compile(r'[\w\-!?%@#$^&*()\[\]"]*')), "'"
+    grammar = "'", p.attr('text', re.compile(r'[^\']*')), "'"
 
 
 class UnquotedText:
-    grammar = p.attr('text', p.re.compile(r'[\w\-!?%@#$^&*()\[\]]+'))
+    grammar = p.attr('text', re.compile(r'[^\'\"]+'))
 
 
 class AbsoluteArgument:
