@@ -89,7 +89,6 @@ def parse_flags(args: [str], parsedef: Dict[str, Flag]) -> (Dict[str, Union[str,
                 mode = Mode.restargs
                 rest_args.append(arg)
         elif mode == Mode.restargs:
-            print(arg)
             rest_args.append(arg)
         elif mode == Mode.longcontentflag:
             # noinspection PyUnboundLocalVariable

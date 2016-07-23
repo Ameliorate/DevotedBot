@@ -43,7 +43,6 @@ def parse_pm(message_parsed: str) -> (TerminalCommand, PrivateMessage):
 
 def run_command(cmd: TerminalCommand, stdout: Chat, command_cfg: ConfigParser, name: str):
     if type(cmd.content) == Command:
-        print('aaa')
         arglist = []
         if cmd.content.args is not None:
             for arg in cmd.content.args:
@@ -51,7 +50,6 @@ def run_command(cmd: TerminalCommand, stdout: Chat, command_cfg: ConfigParser, n
                     arglist.append(arg.content.text.text)
                 elif type(arg.content) == RedirectedArgument:
                     raise NotImplementedError('redirected arguments are not yet implemented')
-        print(arglist)
         arglist = [cmd.content.command] + arglist
         try:
             commandmod = __import__('commands.' + cmd.content.command, fromlist=['*'])
