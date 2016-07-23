@@ -75,7 +75,7 @@ def parse_flags(args: [str], parsedef: Dict[str, Flag]) -> (Dict[str, Union[str,
                     elif type(short_map[short_arg][1]) == BooleanFlag:
                         return_dict[short_map[short_arg][0]] = True
                     elif type(short_map[short_arg][1]) == ContentFlag:
-                        return_dict[short_map[short_arg][0]] = arg[i:]
+                        return_dict[short_map[short_arg][0]] = arg[i + 2:]
                         break
             elif arg.startswith('--'):
                 long_arg = arg[2:]
