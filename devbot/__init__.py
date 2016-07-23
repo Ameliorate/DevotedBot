@@ -4,6 +4,7 @@ import pypeg2
 from contextlib import contextmanager
 from devbot.chat import Chat
 from devbot.parse import *
+from devbot.argparse import UnknownFlagError
 from configparser import ConfigParser
 from threading import Thread
 
@@ -11,7 +12,10 @@ from threading import Thread
 class DevCommand:
     def __init__(self, args: [str], command_cfg: ConfigParser, stdout: Chat, name: str):
         self.command_cfg = command_cfg
-        self.main(args, stdout, name)
+        try:
+            self.main(args, stdout, name)
+        except UnknownFlagError as e:
+            stdout.say(str(e))
 
     def main(self, args: [str], stdout: Chat, name: str):
         raise NotImplementedError('Command is an abstract base class')

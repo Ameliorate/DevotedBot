@@ -58,3 +58,11 @@ def command_wrap(prefix, message):
     wrap = textwrap.wrap(message, max_len)
     for msg in wrap:
         command(prefix + msg)
+
+
+def private_message(person: str, message: str):
+    command_wrap('/m {} '.format(person), message)
+
+
+def group_message(group: str, message: str):
+    command_wrap('/g {} '.format(group), message)
