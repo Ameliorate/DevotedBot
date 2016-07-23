@@ -4,6 +4,7 @@ from devbot.argparse import BooleanFlag, ContentFlag, parse_flags
 from devbot.parse import *
 
 import re
+import time
 
 
 class MainCommand(DevCommand):
@@ -16,7 +17,7 @@ class MainCommand(DevCommand):
         if flags['interactive']:
             regex = r'From {}: *.'.format(name)
 
-            def hook(msg: str):
+            def hook(msg: str) -> bool:
                 pm = p.parse(msg, PrivateMessage)
                 if pm.name == name:
                     if re.match(r'exit|quit|e|q', pm.message, re.IGNORECASE):
@@ -40,4 +41,13 @@ class MainCommand(DevCommand):
             group_message(flags['channel'], "``{}'' -{}".format(to_say, name))
         else:
             group_message(flags['channel'], "``{}''".format(to_say))
+
+        def err_hook(msg: str) -> bool:
+            stdout.say('There is no group with the name {}'.format(flags['channel']))
+            return True
+
+        chat_hook(r'There is no group with that name', err_hook)
+        time.sleep(5)
+        del_chat_hook(r'There is no group with that name')
+
 
