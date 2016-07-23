@@ -107,6 +107,7 @@ def handle_chat(message, protocol):
     """
     :return: Weather or not the chat message was a valid command
     """
+    message = message.strip()
     any_chat_hook_ran = False
     # noinspection PyProtectedMember
     for hook in chat._CHAT_HOOKS.keys():
@@ -118,7 +119,6 @@ def handle_chat(message, protocol):
                 return True
     if any_chat_hook_ran:
         return True
-    message = message.strip()
     if message == 'You are already chatting in that group.':
         return True
     elif re.match(r'From Amelorate: ssh', message):
