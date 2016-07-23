@@ -11,7 +11,7 @@ class SQuotedText:
 
 
 class UnquotedText:
-    grammar = p.attr('text', re.compile(r'[^\'\" ]+'))
+    grammar = p.attr('text', re.compile(r'[^\'\" ][^ ]*[^\'\" ]?'))
 
 
 class AbsoluteArgument:
