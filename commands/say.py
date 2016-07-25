@@ -12,8 +12,8 @@ WIKI = 'https://github.com/Ameliorate/DevotedBot/wiki/say'
 class MainCommand(DevCommand):
     def main(self, args: [str], stdout: Chat, name: str):
         flags, rest_args = parse_flags(args[1:], {'interactive': BooleanFlag('i', 'interactive'),
-                                              'sign': BooleanFlag('s', 'sign'),
-                                              'channel': ContentFlag('c', 'channel')})
+                                                  'sign': BooleanFlag('s', 'sign'),
+                                                  'channel': ContentFlag('c', 'channel')})
         if flags['channel'] is None:
             flags['channel'] = 'GlobalChat'
         if flags['interactive']:
@@ -32,6 +32,7 @@ class MainCommand(DevCommand):
                     return True
                 else:
                     return False
+
             chat_hook(regex, hook)
             stdout.say('Entered interactive say. Use the command `e` to exit.')
             return
@@ -51,5 +52,3 @@ class MainCommand(DevCommand):
         chat_hook(r'There is no group with that name', err_hook)
         time.sleep(5)
         del_chat_hook(r'There is no group with that name')
-
-
