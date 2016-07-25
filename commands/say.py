@@ -13,9 +13,14 @@ class MainCommand(DevCommand):
     def main(self, args: [str], stdout: Chat, name: str):
         flags, rest_args = parse_flags(args[1:], {'interactive': BooleanFlag('i', 'interactive'),
                                                   'sign': BooleanFlag('s', 'sign'),
-                                                  'channel': ContentFlag('c', 'channel')})
+                                                  'channel': ContentFlag('c', 'channel'),
+                                                  'name': ContentFlag('n', 'name')})
         if flags['channel'] is None:
             flags['channel'] = 'GlobalChat'
+        if flags['name'] is not None:
+            flags['sign'] = True
+        if flags['name'] is None:
+            flags['name'] = name
         if flags['interactive']:
             regex = r'From {}: *.'.format(name)
 
@@ -26,7 +31,7 @@ class MainCommand(DevCommand):
                         del_chat_hook(regex)
                         stdout.say('Exited interactive say')
                     elif flags['sign']:
-                        group_message(flags['channel'], "``{}'' -{}".format(pm.message, name))
+                        group_message(flags['channel'], "``{}'' -{}".format(pm.message, flags['name']))
                     else:
                         group_message(flags['channel'], "``{}''".format(pm.message))
                     return True
@@ -41,7 +46,7 @@ class MainCommand(DevCommand):
             to_say = to_say + word + ' '
         to_say = to_say.strip()
         if flags['sign']:
-            group_message(flags['channel'], "``{}'' -{}".format(to_say, name))
+            group_message(flags['channel'], "``{}'' -{}".format(to_say, flags['name']))
         else:
             group_message(flags['channel'], "``{}''".format(to_say))
 
