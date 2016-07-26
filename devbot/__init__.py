@@ -57,7 +57,8 @@ def run_command(cmd: TerminalCommand, stdout: Chat, command_cfg: ConfigParser, n
         arglist = [cmd.content.command] + arglist
         try:
             commandmod = __import__('commands.' + cmd.content.command, fromlist=['*'])
-        except ImportError:
+        except ImportError as e:
+            print(str(e))
             stdout.say('There was no command by the name `{}`'.format(cmd.content.command))
             return
         Thread(target=commandmod.MainCommand, name=cmd.content.command,

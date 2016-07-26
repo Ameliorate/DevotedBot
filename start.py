@@ -112,11 +112,12 @@ def handle_chat(message, protocol):
     # noinspection PyProtectedMember
     for hook in chat._CHAT_HOOKS.keys():
         if re.match(hook, message):
-            any_chat_hook_ran = True
             # noinspection PyProtectedMember
-            result = chat._CHAT_HOOKS[hook](message)
-            if result:
-                return True
+            for to_run in chat._CHAT_HOOKS[hook]:
+                any_chat_hook_ran = True
+                result = to_run(message)
+                if result:
+                    return True
     if any_chat_hook_ran:
         return True
     if message == 'You are already chatting in that group.':

@@ -1,6 +1,5 @@
 import textwrap
 import queue
-import re
 
 from devbot.exception import ChatMessageTooLongError
 
@@ -72,18 +71,24 @@ def group_message(group: str, message: str):
     command_wrap('/g {} '.format(group), message)
 
 
-def chat_hook(regex: str, hook: Callable[[str], bool]):
+class _ChatHook:
+    def __init__(self, regex, hook):
+        self.regex = regex
+        self.hook = hook
+
+    def remove(self):
+        _CHAT_HOOKS[self.regex].discard(self.hook)
+
+
+def chat_hook(regex: str, hook: Callable[[str], bool]) -> _ChatHook:
     """
     Add a hook that'll be called every time the line of chat matches the given regex.
     :param regex: The regex the chat is matched against.
     :param hook: The function to be called. It is called with the chat message as it's only argument. If true is returned,
                  no other hooks are ran.
     """
-    _CHAT_HOOKS[regex] = hook
-
-
-def del_chat_hook(regex: str):
-    """
-    Disable the chat hook with the given regex.
-    """
-    del _CHAT_HOOKS[regex]
+    if regex in _CHAT_HOOKS:
+        _CHAT_HOOKS[regex].add(hook)
+        return _ChatHook(regex, hook)
+    _CHAT_HOOKS[regex] = {hook}
+    return _ChatHook(regex, 0)

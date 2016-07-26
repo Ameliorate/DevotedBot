@@ -1,4 +1,4 @@
-from devbot.chat import Chat, group_message, del_chat_hook, chat_hook
+from devbot.chat import Chat, group_message, chat_hook
 from devbot import DevCommand
 from devbot.argparse import BooleanFlag, ContentFlag, parse_flags
 from devbot.parse import *
@@ -23,12 +23,13 @@ class MainCommand(DevCommand):
             flags['name'] = name
         if flags['interactive']:
             regex = r'From {}: *.'.format(name)
+            hook_key = None
 
             def hook(msg: str) -> bool:
                 pm = p.parse(msg, PrivateMessage)
                 if pm.name == name:
                     if re.match(r'exit|quit|e|q', pm.message, re.IGNORECASE):
-                        del_chat_hook(regex)
+                        hook_key.remove()
                         stdout.say('Exited interactive say')
                     elif flags['sign']:
                         group_message(flags['channel'], "``{}'' -{}".format(pm.message, flags['name']))
@@ -38,7 +39,7 @@ class MainCommand(DevCommand):
                 else:
                     return False
 
-            chat_hook(regex, hook)
+            hook_key = chat_hook(regex, hook)
             stdout.say('Entered interactive say. Use the command `e` to exit.')
             return
         to_say = ''
@@ -54,6 +55,6 @@ class MainCommand(DevCommand):
             stdout.say('There is no group with the name {}'.format(flags['channel']))
             return False
 
-        chat_hook(r'There is no group with that name', err_hook)
+        hook_key = chat_hook(r'There is no group with that name', err_hook)
         time.sleep(5)
-        del_chat_hook(r'There is no group with that name')
+        hook_key.remove()
