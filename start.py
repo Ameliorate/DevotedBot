@@ -26,6 +26,14 @@ class DevotedBotClientProtocol(ClientProtocol):
         COMMANDS = configparser.ConfigParser()
         COMMANDS.read(COMMAND_FILE)
         chat.process_chat(self)
+        # Packing Client Settings packet
+        buffer = self.buff_type.pack_string('en_GB') + \
+                 self.buff_type.pack('b', 1) + \
+                 self.buff_type.pack_varint(0, signed=True) + \
+                 self.buff_type.pack('?', True) + \
+                 self.buff_type.pack('B', 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40) + \
+                 self.buff_type.pack_varint(1)
+        self.send_packet('client_settings', buffer)
 
     def packet_update_health(self, buff):
         health = buff.unpack('f')
